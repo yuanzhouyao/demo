@@ -134,7 +134,14 @@ class workThread(QThread): # 主进程类
                     self.switch_D10.state = 1 # 开关D10开启，state=1
                     self.switch_TD08.check_on() # 检查开关TD08状态
                     if self.switch_TD08.state == 0: # 如果开关TD08未触发
-                        pass # 连续循环读五秒TD08状态，如果中途开启，state为并立即跳出循环，否则为0（待写）
+                        # 连续循环读五秒TD08状态，如果中途开启，state为并立即跳出循环，否则为0
+                        time_TD08 = 0
+                        while time_TD08 < 5:
+                            time.sleep(1)
+                            time_TD08 += 1
+                            self.switch_TD08.check_on()
+                            if self.state == 1:
+                                break
                     if self.switch_TD08.state == 0: # 如果开关TD08五秒钟未触发
                         self.motor_D03.stop()   # 电机D03停止
                         pass # 报警（待写）
@@ -158,7 +165,10 @@ class workThread(QThread): # 主进程类
                                         time_c += 1
                                         self.switch_TDO1.check_on() 
                                         self.switch_TD02.check_on()
-                                        if
+                                        if self.switch_TDO1.state == 0 and self.switch_TD02.state == 0:
+                                            time_flag = True
+                                            break
+                                    time_flag = True
                         if time_flag = True:
                             self.motor_D03.reverse()  #D03电机反转
                             self.switch_D10.state = 0 # 开关D10关，state=0
