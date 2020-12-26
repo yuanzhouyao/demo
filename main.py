@@ -131,7 +131,7 @@ class workThread(QThread): # 主进程类
                 if self.switch_TDO1.state == 1 and self.switch_TD02.state == 1: # 如果开关TD01和TD02开启
                     time_start = time.time()  #开始计时
                     self.motor_D03.forward()   # 电机D03正转
-                    self.switch_D10.state = 1 # 开关D10开启，state=1
+                    self.switch_D10.set_state(1) # 开关D10开启，state=1
                     self.switch_TD08.check_on() # 检查开关TD08状态
                     if self.switch_TD08.state == 0: # 如果开关TD08未触发
                         # 连续循环读五秒TD08状态，如果中途开启，state为并立即跳出循环，否则为0
