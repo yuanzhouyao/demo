@@ -88,6 +88,8 @@ class workThread(QThread): # 主进程类
 
         # 电机
         self.motor_D03 = None
+        self.motor_D02 = None
+        self.motor_D01 = None
 
         #开关
         self.switch_TDO1 = None
@@ -96,16 +98,22 @@ class workThread(QThread): # 主进程类
         self.switch_TD08 = None
         self.switch_TD10 = None
 
-    def setdevice(self, motor_D03, switch_TDO1, switch_TD02, switch_D10, switch_TD08, switch_TD10): # 设置参数，并开启线程
+    def setdevice(self, motor_D03, motor_D02, motor_D01, switch_TDO1, switch_TD02, switch_D10, switch_TD05, switch_TD06, switch_TD07, switch_TD08, switch_TD09, switch_TD10): # 设置参数，并开启线程
         # 电机
         self.motor_D03 = motor_D03
+        self.motor_D02 = motor_D02
+        self.motor_D01 = motor_D01
 
         #开关
         self.switch_TDO1 = switch_TDO1
         self.switch_TD02 = switch_TD02
-        self.switch_D10 = switch_D10
+        self.switch_D10  = switch_D10
         self.switch_TD08 = switch_TD08
+        self.switch_TD09 = switch_TD09
         self.switch_TD10 = switch_TD10
+        self.switch_TD05 = switch_TD05
+        self.switch_TD06 = switch_TD06
+        self.switch_TD07 = switch_TD07
 
         self.start()  # 启动主线程run()函数，线程开始工作
         self.run_flag = True # 线程开启，flag为True（表示开启）
@@ -134,10 +142,10 @@ class workThread(QThread): # 主进程类
                         self.motor_D03.stop()   # 电机D03停止
                         self.switch_TD10.check_on() # 检查开关TD10状态
                         if self.switch_TD10.state == 1: # 如果开关TD10触发
-                            pass # 称重（待写）
-                        self.switch_TDO1.check_on() 
+                            pass # 称重（待写）D03
+                        self.switch_TDO1.check_on() #检查TD01\TDO2的状态
                         self.switch_TD02.check_on()
-                        time_flag = False
+                        time_flag = False#啥意思
                         if self.switch_TDO1.state == 1 or self.switch_TD02.state == 1: # 不满足皆不触发的条件
                             if self.switch_TDO1.state == 1 and self.switch_TD02.state == 1: # 如果皆触发
                                 time_end = time.time()    #结束计时
@@ -146,11 +154,43 @@ class workThread(QThread): # 主进程类
                                     time_flag = True
                                 else:
                                     while time_c < 60:
-                                        time.sleep(1)
+                                        time.sleep(1)#休眠一秒
                                         time_c += 1
                                         self.switch_TDO1.check_on() 
                                         self.switch_TD02.check_on()
                                         if
+                        if time_flag = True:
+                            self.motor_D03.reverse()  #D03电机反转
+                            self.switch_D10.state = 0 # 开关D10关，state=0
+                            #----上传投递信息
+                            self.switch_TDO9.state = 1#TD09触发
+                              if self.switch_TDO9.state == 1:#如果TD09触发
+                                 self.motor_D03.stop() #D03电机停止
+
+                                 self.switch_TDO5.check_on() #检查TD05\TDO6TD07的状态
+                                 self.switch_TD06.check_on()
+                                 self.switch_TD07.check_on()
+                                  if self.switch_TDO5.check_on() == 0 and self.switch_TD06.check_on() == 0 and self.switch_TD07.check_on()==0:
+                                        #等待下一个投递
+                                    else:
+                                        self.motor_D02.forward()
+                                        self.switch_TDO11.state = 1
+                                        if self.switch_TDO11.state == 1：
+                                           self.motor_D02.stop()#
+                                           self.motor_D01.forward()
+                                           self.sw
+                                           if 
+
+
+
+
+                              else
+                            time_start = time.time()  #开始计时
+                            time_end = time.time()    #结束计时
+                            time_c = time_end - time_start   #运行所花时间，单位s
+
+
+                        
 
             except Exception as e:
                 print(str(e))
